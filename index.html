@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0d0f14;
+            --card: #161920;
+            --border: #2a2d36;
+            --accent: #4f8ef7;
+            --accent2: #7c5cfc;
+            --text: #e8eaf0;
+            --muted: #7a7f94;
+            --input-bg: #1c2030;
+            --error: #f76b6b;
+            --success: #4fcf7a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated background blobs */
+        .bg-blobs {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.18;
+            animation: floatBlob 10s ease-in-out infinite alternate;
+        }
+
+        .blob1 {
+            width: 420px;
+            height: 420px;
+            background: var(--accent);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob2 {
+            width: 320px;
+            height: 320px;
+            background: var(--accent2);
+            bottom: -80px;
+            right: -60px;
+            animation-delay: 3s;
+        }
+
+        .blob3 {
+            width: 200px;
+            height: 200px;
+            background: #f76b6b;
+            top: 50%;
+            left: 60%;
+            animation-delay: 6s;
+        }
+
+        @keyframes floatBlob {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(30px, 20px) scale(1.08);
+            }
+        }
+
+        /* Card */
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 420px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 44px 40px 36px;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(79, 142, 247, 0.08);
+            animation: slideUp 0.6s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(32px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Logo dot */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .logo-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-dot svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .logo-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--text);
+            letter-spacing: 0.3px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 32px;
+            font-weight: 300;
+        }
+
+        /* Input groups */
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            stroke: var(--muted);
+            transition: stroke 0.2s;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input::placeholder {
+            color: #40455a;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.12);
+        }
+
+        input:focus+svg,
+        .input-wrap:focus-within svg {
+            stroke: var(--accent);
+        }
+
+        /* Toggle password */
+        .toggle-pass {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .toggle-pass svg {
+            position: static;
+            transform: none;
+            width: 16px;
+            height: 16px;
+            stroke: var(--muted);
+            transition: stroke 0.2s;
+        }
+
+        .toggle-pass:hover svg {
+            stroke: var(--text);
+        }
+
+        /* Row */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 4px 0 28px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .remember input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .remember span {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        a {
+            font-size: 13px;
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.75;
+        }
+
+        /* Submit button */
+        .btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(79, 142, 247, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(79, 142, 247, 0.35);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(0);
+            animation: rippleAnim 0.5s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Message */
+        .msg {
+            margin-top: 14px;
+            font-size: 13px;
+            text-align: center;
+            min-height: 18px;
+            transition: color 0.3s;
+        }
+
+        .msg.success {
+            color: var(--success);
+        }
+
+        .msg.error {
+            color: var(--error);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 22px 0;
+        }
+
+        .divider hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .divider span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Sign up */
+        .signup {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .signup a {
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+    </div>
+
+    <div class="card">
+        <div class="logo">
+            <div class="logo-dot">
+                <svg viewBox="0 0 24 24">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+            </div>
+            <span class="logo-name">DevApp</span>
+        </div>
+
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to continue to your dashboard</p>
+
+        <div class="field">
+            <label for="email">Email Address</label>
+            <div class="input-wrap">
+                <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+                <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="remember">
+                <input type="checkbox" id="remember" />
+                <span>Remember me</span>
+            </label>
+            <a href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn" onclick="handleSubmit(event)">Sign In</button>
+        <p class="msg" id="msg"></p>
+
+        <div class="divider">
+            <hr /><span>New here?</span>
+            <hr />
+        </div>
+        <p class="signup">Don't have an account? <a href="#">Create one</a></p>
+    </div>
+
+
+    <---------------------SCRIPT----------------->
+    <script>
+        function togglePassword(btn)//This function is used to show / hide password
+        {
+            const input = document.getElementById("password");
+            const isHidden = input.type === "password";
+            // input.type = isHidden ? "text" : "password";
+            // btn.querySelector("svg").style.stroke = isHidden ? "var(--accent)" : "var(--muted)";
+        }
+
+        function handleSubmit(e) {
+            // Ripple effect
+            const btn = e.currentTarget;
+            const ripple = document.createElement("span");
+            const rect = btn.getBoundingClientRect();
+            // ripple.className = "ripple";
+            // ripple.style.cssText = `width:${rect.width}px;height:${rect.width}px;left:${e.clientX - rect.left - rect.width / 2}px;top:${e.clientY - rect.top - rect.width / 2}px`;
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 500);
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const msg = document.getElementById("msg");
+
+            if (!email || !password) {
+                msg.textContent = "⚠ Please fill in all fields.";
+                msg.className = "msg error";
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                msg.textContent = "⚠ Please enter a valid email address.";
+                msg.className = "msg error";
+                return;
+            }
+           const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{10,}$/;
+
+if (!passwordRegex.test(password)) {
+    msg.textContent = "⚠ Password must include letter, number & special character";
+    msg.className = "msg error";
+    return;
+}
+
+            msg.textContent = "✓ Signed in successfully!";
+            msg.className = "msg success";
+
+            console.log("Email:", email);
+            console.log("Password:", password);
+        }
+    </script>
+</body>
+
+</html>
